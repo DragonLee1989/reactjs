@@ -7,7 +7,13 @@ class ModalUser extends Component {
   // props: properties giúp Class Con lấy dữ liệu từ claas Cha
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      address: "",
+    };
   }
   componentDidMount() {}
 
@@ -15,6 +21,10 @@ class ModalUser extends Component {
     // alert("TOGGLE");
     // call class toggleFromParent() tu Class Cha "props" trong UserManage.js
     this.props.toggleFromParent();
+  };
+
+  handleOnchangeInput = (event, id) => {
+    console.log(id + ":" + event.target.value);
   };
 
   render() {
@@ -28,7 +38,7 @@ class ModalUser extends Component {
         }}
         size="lg"
         // centered
-        className="classModal"
+        className="modal-user-container"
       >
         <ModalHeader
           toggle={() => {
@@ -38,35 +48,72 @@ class ModalUser extends Component {
           Create a New User
         </ModalHeader>
         <ModalBody>
-          <div className="container">
-            <div className="row">
-              <div className="col-6 form-group">
-                <label>Email</label>
-                <input type="text" />
-              </div>
-              <div className="col-6 form-group">
-                <label>Email</label>
-                <input type="password" />
-              </div>
+          <div className="modal-user-body">
+            <div className="input-container">
+              <label>Email</label>
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnchangeInput(event, "email");
+                }}
+              />
+            </div>
+            <div className="input-container">
+              <label>Password</label>
+              <input
+                type="password"
+                onChange={(event) => {
+                  this.handleOnchangeInput(event, "password");
+                }}
+              />
+            </div>
+            <div className="input-container">
+              <label>First Name</label>
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnchangeInput(event, "firstName");
+                }}
+              />
+            </div>
+            <div className="input-container">
+              <label>Last Name</label>
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnchangeInput(event, "lastName");
+                }}
+              />
+            </div>
+            <div className="input-container max-width-input">
+              <label>Address</label>
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnchangeInput(event, "address");
+                }}
+              />
             </div>
           </div>
         </ModalBody>
         <ModalFooter>
           <Button
             color="primary"
+            className="px-2"
             onClick={() => {
               this.toggle();
             }}
           >
-            Do Something
+            Add New
           </Button>{" "}
           <Button
             color="secondary"
+            className="px-2"
             onClick={() => {
               this.toggle();
             }}
           >
-            Cancel
+            Close
           </Button>
         </ModalFooter>
       </Modal>
