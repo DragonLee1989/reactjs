@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { emitter } from "../../utils/emitter";
 
 class ModalUser extends Component {
   // props: properties giúp Class Con lấy dữ liệu từ claas Cha
@@ -14,8 +15,31 @@ class ModalUser extends Component {
       lastName: "",
       address: "",
     };
+
+    this.listenToEmitter();
   }
-  componentDidMount() {}
+
+  listenToEmitter() {
+    // truyen DATA tu parent to child khi co thong tin event "EVENT_CLEAR_MODAL_DATA"
+    // emitter.on("EVENT_CLEAR_MODAL_DATA", (data) => {
+    //   console.log("Listen emitter from parent: ", data);
+    // });
+    emitter.on("EVENT_CLEAR_MODAL_DATA", () => {
+      // reset state
+      this.setState({
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        address: "",
+      });
+      console.log("EVENT_CLEAR_MODAL_DATA has resetted: ", this.state);
+    });
+  }
+
+  componentDidMount() {
+    console.log("Mouting Modal");
+  }
 
   toggle = () => {
     // alert("TOGGLE");

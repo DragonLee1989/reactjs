@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import "./UserManage.scss";
-import { getAllUsers, createNewUserService } from "../../services/userService";
+import {
+  getAllUsers,
+  createNewUserService,
+  deleteUserService,
+} from "../../services/userService";
 import ModalUser from "./ModalUser";
+import { emitter } from "../../utils/emitter";
 
 class UserManage extends Component {
   //   state = {};
@@ -57,11 +62,29 @@ class UserManage extends Component {
         this.setState({
           isOpenModalUser: false,
         });
+        // clear MODAL USER sau khi ADD USER
+        // emitter.emit("EVENT_CLEAR_MODAL_DATA", { id: "your id" });
+        emitter.emit("EVENT_CLEAR_MODAL_DATA");
       }
     } catch (error) {
       console.log("Error Data createNewUserService at UserManager", error);
     }
     // console.log("Get Data from Child at Father_UserManager: ", data);
+  };
+
+  handleDeteleUser = async (user) => {
+    console.log("DELETE USER", user.id);
+    try {
+      let response = await deleteUserService(user.id);
+      // console.log(response);
+      if (response && response.message.errCode == 0) {
+        await this.getAllUsersFromReact();
+      } else {
+        alert(response.message.errMessage);
+      }
+    } catch (error) {
+      console.log("deleteUserService at UserManage: ", error);
+    }
   };
 
   render() {
@@ -110,7 +133,10 @@ class UserManage extends Component {
                         <button className="btn-edit">
                           <i className="fas fa-edit"></i>
                         </button>
-                        <button className="btn-del">
+                        <button
+                          className="btn-del"
+                          onClick={() => this.handleDeteleUser(item)}
+                        >
                           <i className="fas fa-trash"></i>
                         </button>
                       </td>
