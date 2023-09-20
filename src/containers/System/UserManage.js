@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import "./UserManage.scss";
-import { getAllUsers } from "../../services/userService";
+import { getAllUsers, createNewUserService } from "../../services/userService";
 import ModalUser from "./ModalUser";
 
 class UserManage extends Component {
@@ -18,6 +18,10 @@ class UserManage extends Component {
 
   // ham goi API => DidMount => set state: ham gan gia tri cho cac bien state
   async componentDidMount() {
+    await this.getAllUsersFromReact();
+  }
+
+  getAllUsersFromReact = async () => {
     let response = await getAllUsers("ALL");
     if (response && response.errCode == 0) {
       this.setState({
@@ -25,7 +29,7 @@ class UserManage extends Component {
       });
     }
     console.log("getAllUsers: ", this.state.arrayUsers);
-  }
+  };
 
   handleAddNewUser = () => {
     this.setState({
@@ -41,14 +45,27 @@ class UserManage extends Component {
     });
   };
 
+  createNewUser = async (data) => {
+    // alert("call me");
+    try {
+      let response = await createNewUserService(data);
+      console.log("Check Data createNewUserService: ", response);
+    } catch (error) {
+      console.log("Error Data createNewUserService at UserManager", error);
+    }
+    console.log("Get Data from Child at Father_UserManager: ", data);
+  };
+
   render() {
     console.log("CHECK STATE: ", this.state);
     let arrUsers = this.state.arrayUsers;
     return (
       <div className="users-container">
+        {/* Cho phép thèn con gọi thèn cha để thèn cha cập nhật thông tin từ các thèn con */}
         <ModalUser
           isOpen={this.state.isOpenModalUser}
           toggleFromParent={this.toggleUserModal}
+          createNewUser={this.createNewUser}
         />
         <div className="title text-center">Manage Users</div>
         <div className="mx-1">

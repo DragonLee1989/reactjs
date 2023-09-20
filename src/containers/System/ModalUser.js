@@ -24,12 +24,56 @@ class ModalUser extends Component {
   };
 
   handleOnchangeInput = (event, id) => {
-    console.log(id + ":" + event.target.value);
+    // BAD CODE: chỉnh sửa rồi copy state "modify trực tiếp" dễ gây lỗi
+    // this.state[id] = event.target.value;
+    // this.setState(
+    //   {
+    //     ...this.state, // "...": copy state
+    //   },
+    //   () => {
+    //     console.log("Check bad state: ", this.state);
+    //   }
+    // );
+    // GOOD CODE: copy state trước khi chỉnh sửa "modify gián tiếp"
+    let copyState = { ...this.state };
+    copyState[id] = event.target.value;
+    this.setState(
+      {
+        ...copyState,
+      },
+      () => {
+        console.log("Check good state: ", this.state);
+      }
+    );
+    // console.log(id + ":" + event.target.value);
+  };
+
+  handleAddNewUser = () => {
+    // check Validate từng Input
+    let isValid = this.checkValidateInput();
+    if (isValid) {
+      // Gọi funtion "createNewUser()" từ thèn cha "UserManager"
+      this.props.createNewUser(this.state);
+      console.log("Data ModalUser: ", this.state);
+    }
+  };
+
+  checkValidateInput = () => {
+    let isValid = true;
+    let arrInput = ["email", "password", "firstName", "lastName", "address"];
+    for (let i = 0; i < arrInput.length; i++) {
+      if (!this.state[arrInput[i]]) {
+        isValid = false;
+        alert("Missing parameter: " + arrInput[i]);
+        break; // thoat khoi vong lap for
+      }
+    }
+    return isValid;
   };
 
   render() {
-    console.log("Check child props in ModalUserjs", this.props);
-    console.log("Check child open modal in ModalUserjs", this.props.isOpen);
+    // console.log("Check child props in ModalUserjs", this.props);
+    // console.log("Check child open modal in ModalUserjs", this.props.isOpen);
     return (
       <Modal
         isOpen={this.props.isOpen}
@@ -56,6 +100,7 @@ class ModalUser extends Component {
                 onChange={(event) => {
                   this.handleOnchangeInput(event, "email");
                 }}
+                value={this.state.email}
               />
             </div>
             <div className="input-container">
@@ -65,6 +110,7 @@ class ModalUser extends Component {
                 onChange={(event) => {
                   this.handleOnchangeInput(event, "password");
                 }}
+                value={this.state.password}
               />
             </div>
             <div className="input-container">
@@ -74,6 +120,7 @@ class ModalUser extends Component {
                 onChange={(event) => {
                   this.handleOnchangeInput(event, "firstName");
                 }}
+                value={this.state.firstName}
               />
             </div>
             <div className="input-container">
@@ -83,6 +130,7 @@ class ModalUser extends Component {
                 onChange={(event) => {
                   this.handleOnchangeInput(event, "lastName");
                 }}
+                value={this.state.lastName}
               />
             </div>
             <div className="input-container max-width-input">
@@ -92,6 +140,7 @@ class ModalUser extends Component {
                 onChange={(event) => {
                   this.handleOnchangeInput(event, "address");
                 }}
+                value={this.state.address}
               />
             </div>
           </div>
@@ -101,7 +150,7 @@ class ModalUser extends Component {
             color="primary"
             className="px-2"
             onClick={() => {
-              this.toggle();
+              this.handleAddNewUser();
             }}
           >
             Add New
