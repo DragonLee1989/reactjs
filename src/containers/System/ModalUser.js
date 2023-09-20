@@ -16,6 +16,9 @@ class ModalUser extends Component {
       address: "",
     };
 
+    // fire event: child => parent using "props"
+    // fire event: parent => child using "ref"
+    // fire event: parent <=> child using "emitter"
     this.listenToEmitter();
   }
 
