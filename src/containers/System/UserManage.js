@@ -49,11 +49,19 @@ class UserManage extends Component {
     // alert("call me");
     try {
       let response = await createNewUserService(data);
-      console.log("Check Data createNewUserService: ", response);
+      console.log("Check Data createNewUserService at UserManager: ", response);
+      if (response && response.message.errCode !== 0) {
+        alert(response.message.errMessage);
+      } else {
+        await this.getAllUsersFromReact();
+        this.setState({
+          isOpenModalUser: false,
+        });
+      }
     } catch (error) {
       console.log("Error Data createNewUserService at UserManager", error);
     }
-    console.log("Get Data from Child at Father_UserManager: ", data);
+    // console.log("Get Data from Child at Father_UserManager: ", data);
   };
 
   render() {
