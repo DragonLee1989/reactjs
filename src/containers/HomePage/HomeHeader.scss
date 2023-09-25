@@ -1,0 +1,45 @@
+.home-header-container{
+    height: 60px;
+    width: 100%;
+    padding: 0 20px;
+    // border: 1px solid red;
+    .home-header-content{
+        height: 100%;
+        width: 100%;
+        display: flex; // hang ngang
+        .left-content{
+            width: 25%;
+            border: 1px solid blue;
+            display: flex;
+            align-items: center;
+            .menu{
+                font-size: 25px;
+                color: grey;
+                cursor: pointer;
+            }
+            .header-logo{
+                background: url(../../assets/logo.svg) center center no-repeat;
+                height: 100%;
+                width: 100%;
+                cursor: pointer;
+            }
+        }
+        .center-content{
+            width: 50%;
+            border: 1px solid red;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .child-content{
+                .sub-title{
+                    font-size: 11px;
+                }
+            }
+        }
+        .right-content{
+            width: 25%;
+            border: 1px solid green;
+
+        }
+    }
+}
