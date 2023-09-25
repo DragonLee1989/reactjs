@@ -6,9 +6,11 @@ import {
   getAllUsers,
   createNewUserService,
   deleteUserService,
+  updateEditUserService,
 } from "../../services/userService";
 import ModalUser from "./ModalUser";
 import { emitter } from "../../utils/emitter";
+import ModalEditUser from "./ModalEditUser";
 
 class UserManage extends Component {
   //   state = {};
@@ -18,6 +20,8 @@ class UserManage extends Component {
     this.state = {
       arrayUsers: [],
       isOpenModalUser: false,
+      editUser: {},
+      isOpenModalEditUser: false,
     };
   }
 
@@ -47,6 +51,13 @@ class UserManage extends Component {
   toggleUserModal = () => {
     this.setState({
       isOpenModalUser: !this.state.isOpenModalUser,
+    });
+  };
+
+  // toggle: show or hide Modal
+  toggleEditUserModal = () => {
+    this.setState({
+      isOpenModalEditUser: !this.state.isOpenModalEditUser,
     });
   };
 
@@ -87,6 +98,33 @@ class UserManage extends Component {
     }
   };
 
+  handleEditUser = async (user) => {
+    console.log("Edit User: ", user);
+    this.setState({
+      isOpenModalEditUser: true,
+      editUser: user,
+    });
+    // alert("ON CLICK EDIT USER");
+  };
+
+  handleUpdateEditUser = async (user) => {
+    try {
+      let response = await updateEditUserService(user);
+      console.log("Edit User want to update: ", user);
+      // console.log("Edit User response want to update: ", response);
+      if (response && response.errCode == 0) {
+        await this.getAllUsersFromReact();
+        this.setState({
+          isOpenModalEditUser: false,
+        });
+      } else {
+        alert(response.errMessage);
+      }
+    } catch (error) {
+      console.log("Error at handleUpdateEditUser", error);
+    }
+  };
+
   render() {
     console.log("CHECK STATE: ", this.state);
     let arrUsers = this.state.arrayUsers;
@@ -98,6 +136,17 @@ class UserManage extends Component {
           toggleFromParent={this.toggleUserModal}
           createNewUser={this.createNewUser}
         />
+
+        {this.state.isOpenModalEditUser && (
+          <ModalEditUser
+            isOpen={this.state.isOpenModalEditUser}
+            toggleFromParent={this.toggleEditUserModal}
+            // truyen "editUser" cua then cha cho then con "currentUser"
+            currentUser={this.state.editUser}
+            // then CON "editUser" call ham "handleUpdateEditUser" tu then CHA
+            editUser={this.handleUpdateEditUser}
+          />
+        )}
         <div className="title text-center">Manage Users</div>
         <div className="mx-1">
           <button
@@ -130,7 +179,10 @@ class UserManage extends Component {
                       <td>{item.lastName}</td>
                       <td>{item.address}</td>
                       <td>
-                        <button className="btn-edit">
+                        <button
+                          className="btn-edit"
+                          onClick={() => this.handleEditUser(item)}
+                        >
                           <i className="fas fa-edit"></i>
                         </button>
                         <button
